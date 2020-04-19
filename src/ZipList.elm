@@ -12,8 +12,10 @@ module ZipList exposing
 {-| A `ZipList` is a list that has a single selected element. We call it current as "the one that is currently selected".
 
 To get more explicit examples, I'm gona represent `ZipList`s as `List`s that have the selected element between "<...>":
+
     Zipper [] 0 [1, 2, 3, 4]  == [<0>, 1, 2, 3, 4]
     Zipper [2, 1, 0] 3 [4]    == [0, 1, 2, <3>, 4]
+
 This **pseudocode** will make the documentation way more enjoyable.
 
 # ZipLists
