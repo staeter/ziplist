@@ -1,0 +1,14 @@
+{
+    "type": "package",
+    "name": "STTR13/ziplist",
+    "summary": "A list that has an element selected that can go through the whole list and act on it.",
+    "license": "BSD-3-Clause",
+    "version": "1.0.0",
+    "exposed-modules": [
+        "ZipList"
+    ],
+    "elm-version": "0.19.0 <= v < 0.20.0",
+    "dependencies": {
+        "elm/core": "1.0.0 <= v < 2.0.0"
+    }
+}
