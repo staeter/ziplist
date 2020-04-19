@@ -20,7 +20,7 @@ This **pseudocode** will make the documentation way more enjoyable.
 @docs ZipList
 
 # Create
-@docs fromList, singleton
+@docs new, fromList, singleton
 
 # Consult
 @docs current, toList, length, currentIndex, isCurrent
@@ -36,9 +36,6 @@ This **pseudocode** will make the documentation way more enjoyable.
 
 # Mapping
 @docs map, indexedMap, selectedMap, indexedSelectedMap
-
-# Decode
-@docs zipListDecoder
 
 -}
 
