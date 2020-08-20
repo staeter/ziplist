@@ -2,7 +2,7 @@ module ZipList exposing
     ( ZipList(..)
     , new, fromList, singleton
     , current, toList, length, currentIndex, isCurrent
-    , remove, replace, insert, insertAfter, insertBefore
+    , remove, replace, insert, insertAfter, insertBefore, filter
     , forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
     , goToStart, goToEnd, goToIndex, goToFirst, goToNext, goToLast, goToPrevious
     , map, indexedMap, selectedMap, indexedSelectedMap
@@ -28,7 +28,7 @@ This **pseudocode** will make the documentation way more enjoyable.
 @docs current, toList, length, currentIndex, isCurrent
 
 # Edit
-@docs remove, replace, insert, insertAfter, insertBefore
+@docs remove, replace, insert, insertAfter, insertBefore, filter
 
 # Move
 @docs forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
@@ -184,6 +184,39 @@ insertAfter newElem (Zipper before elem after) =
 insertBefore : a -> ZipList a -> ZipList a
 insertBefore newElem (Zipper before elem after) =
   Zipper (newElem :: before) elem after
+
+
+{-| Keep elements that satisfy the test.
+
+    filter ((!=) 3) [0, 3, 3, 1, 3, <2>, 3, 4] == Just [0, 1, <2>, 4]
+    filter ((!=) 2) [0, 1, <2>, 3, 4] == Just [0, 1, <3>, 4]
+    filter ((!=) 4) [0, 1, 2, 3, <4>] == Just [0, 1, 2, <3>]
+    filter ((!=) 4) [4, <4>, 4, 4] == Nothing
+-}
+filter : (a -> Bool) -> ZipList a -> Maybe (ZipList a)
+filter condition (Zipper before elem after) =
+  let
+    filteredBefore =
+      List.filter condition before
+
+    filteredAfter =
+      List.filter condition after
+
+    filteredCurrent =
+      if condition elem
+      then Just elem
+      else Nothing
+  in
+  filteredCurrent
+  |> Maybe.map (\ c -> Zipper filteredBefore c filteredAfter |> Just )
+  |> Maybe.withDefault
+        ( case (filteredBefore, filteredAfter) of
+            ([], []) -> Nothing
+            (head :: queue, []) ->
+                Zipper queue head [] |> Just
+            (beforeBis, head :: queue) ->
+                Zipper beforeBis head queue |> Just
+        )
 
 
 {-| Move current forward. Current will not move if it is at the end of the `ZipList`.
@@ -403,9 +436,8 @@ goToPreviousSub condition zipList =
 
 {-| Apply a function to every element of a `ZipList`.
 
-    map String.fromInt [0, 1, <2>, 3, 4] == ["0", "1", <">"), "3", "4"]
-    map String.fromInt [2, <4>, 3, 5]    == ["2", <">"), "3", "5"]
-    map String.fromInt []                == []
+    map String.fromInt [0, 1, <2>, 3, 4] == ["0", "1", <"2">, "3", "4"]
+    map String.fromInt [2, <4>, 3, 5]    == ["2", <"4">, "3", "5"]
 -}
 map : (a -> b) -> ZipList a -> ZipList b
 map func (Zipper before elem after) =
@@ -419,7 +451,6 @@ map func (Zipper before elem after) =
 
     indexedMap Tuple.pair [1, <2>, 4]     == [(0, 1), <(1, 2)>, (2, 4)]
     indexedMap Tuple.pair ["hi", <"wow">] == [(0, "hi"), <(1, "wow")>]
-    indexedMap Tuple.pair []              == []
 -}
 indexedMap : (Int -> a -> b) -> ZipList a -> ZipList b
 indexedMap func (Zipper before elem after) =
@@ -440,7 +471,6 @@ indexedMap func (Zipper before elem after) =
 
     selectedMap Tuple.pair [<2>, 4]             == [<(True, 2)>, (False, 4)]
     selectedMap Tuple.pair ["en", "fr", <"ge">] == [(False, "en"), (False, "fr"), <(True, "ge")>]
-    selectedMap Tuple.pair []                   == []
 -}
 selectedMap : (Bool -> a -> b) -> ZipList a -> ZipList b
 selectedMap func (Zipper before elem after) =
@@ -459,7 +489,6 @@ selectedMap func (Zipper before elem after) =
         )
     in
       selectedMap myFun [1, <2>, 4] == [(0, False, "1"), <(1, True, "2")>, (2, False, "4")]
-      selectedMap myFun []          == []
 -}
 indexedSelectedMap : (Int -> Bool -> a -> b) -> ZipList a -> ZipList b
 indexedSelectedMap func (Zipper before elem after) =
