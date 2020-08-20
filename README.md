@@ -1,6 +1,6 @@
 This package is inspired by [guid75/ziplist](https://package.elm-lang.org/packages/guid75/ziplist/latest/) and Richard Feldman's conference [Making Impossible States Impossible](https://www.youtube.com/watch?v=IcgmSRJHu_8).
 
-This package is quite young and hasn't been thoroughly checked so you may have some bugs using it. If ever this happens post an issue on gh or make a pull request that solves it. Thanks!
+This package don't have automated tests. If ever some unexpected behaviour happens, please post an issue on gh or make a pull request that solves it. Also if you code some automated tests for the module I would love you <3 Thanks!
 
 # ziplist
 
