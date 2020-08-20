@@ -25,7 +25,7 @@ This **pseudocode** will make the documentation way more enjoyable.
 @docs new, fromList, singleton
 
 # Consult
-@docs current, toList, length, currentIndex, isCurrent
+@docs current, toList, length, currentIndex, isCurrent, isFirst, isLast
 
 # Edit
 @docs remove, replace, insert, insertAfter, insertBefore, filter
@@ -42,6 +42,7 @@ This **pseudocode** will make the documentation way more enjoyable.
 -}
 
 import Maybe exposing (Maybe, map, withDefault)
+import List.Extra
 
 
 {-| A `ZipList` is a list that has a single selected element. We call it current as "the one that is currently selected".
@@ -129,6 +130,38 @@ currentIndex (Zipper before _ _) =
 isCurrent : (a -> Bool) -> ZipList a -> Bool
 isCurrent condition (Zipper _ elem _) =
   condition elem
+
+
+{-| Test wether the first element of the `ZipList` passes a condition.
+
+    isFirst odd [1, <1>, 2]  == True
+    isFirst odd [4, <5>, 2]  == False
+-}
+isFirst : (a -> Bool) -> ZipList a -> Bool
+isFirst condition zipList =
+  case zipList of
+    Zipper [] elem _ -> condition elem
+    Zipper before _ _ ->
+      before
+      |> List.Extra.last
+      |> Maybe.map condition
+      |> Maybe.withDefault False
+
+
+{-| Test wether the last element of the `ZipList` passes a condition.
+
+    isLast odd [1, <1>, 3]  == True
+    isLast odd [4, <5>, 2]  == False
+-}
+isLast : (a -> Bool) -> ZipList a -> Bool
+isLast condition zipList =
+  case zipList of
+    Zipper _ elem [] -> condition elem
+    Zipper _ _ after ->
+      after
+      |> List.Extra.last
+      |> Maybe.map condition
+      |> Maybe.withDefault False
 
 
 {-| Remove current from a `ZipList`. The new current is in priority the `ZipList`'s next element.
