@@ -3,7 +3,7 @@
     "name": "STTR13/ziplist",
     "summary": "List with a selected element that makes impossible state impossible.",
     "license": "BSD-3-Clause",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "exposed-modules": [
         "ZipList"
     ],

@@ -5,3 +5,5 @@ This package don't have automated tests. If ever some unexpected behaviour happe
 # ziplist
 
 A ZipList is a list that has an element selected that can go through the whole list and act on it.
+
+It is very useful if you need non empty lists or if you want to make complex radio buttons.

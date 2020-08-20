@@ -1,7 +1,7 @@
 module ZipList exposing
     ( ZipList(..)
     , new, fromList, singleton
-    , current, toList, length, currentIndex, isCurrent
+    , current, toList, length, currentIndex, isCurrent, isFirst, isLast
     , remove, replace, insert, insertAfter, insertBefore, filter
     , forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
     , goToStart, goToEnd, goToIndex, goToFirst, goToNext, goToLast, goToPrevious
