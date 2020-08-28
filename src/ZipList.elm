@@ -6,6 +6,7 @@ module ZipList exposing
     , forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
     , goToStart, goToEnd, goToIndex, goToFirst, goToNext, goToLast, goToPrevious
     , map, indexedMap, selectedMap, indexedSelectedMap
+    , encode, decode
     )
 
 
@@ -39,10 +40,15 @@ This **pseudocode** will make the documentation way more enjoyable.
 # Mapping
 @docs map, indexedMap, selectedMap, indexedSelectedMap
 
+# Encode / Decode
+@docs encode, decode
+
 -}
 
 import Maybe exposing (Maybe, map, withDefault)
 import List.Extra
+import Json.Encode as Encode
+import Json.Decode as Decode exposing (Decoder)
 
 
 {-| A `ZipList` is a list that has a single selected element. We call it current as "the one that is currently selected".
@@ -545,6 +551,29 @@ indexedSelectedMap func (Zipper before elem after) =
       (\ indexAf elemAf -> func (index + 1 + indexAf) False elemAf )
       after
     )
+
+
+{-| Decode a `ZipList`
+-}
+decode : Decoder a -> Decoder (ZipList a)
+decode elementDecoder =
+  Decode.map3
+    Zipper
+    (Decode.field "before" (Decode.list elementDecoder))
+    (Decode.field "current" elementDecoder)
+    (Decode.field "after" (Decode.list elementDecoder))
+
+
+{-| Encode a `ZipList`
+-}
+encode : (a -> Encode.Value) -> ZipList a -> Encode.Value
+encode elementEncoder (Zipper before elem after) =
+  Encode.object
+      [ ( "before", Encode.list elementEncoder before)
+      , ( "current", elementEncoder elem )
+      , ( "after", Encode.list elementEncoder after )
+      ]
+
 
 
 -- not exposed code
