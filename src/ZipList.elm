@@ -3,6 +3,7 @@ module ZipList exposing
     , new, fromList, singleton
     , current, toList, length, currentIndex, isCurrent, isFirst, isLast
     , remove, replace, insert, insertAfter, insertBefore, filter, reverse
+    , removeAllFolowing, removeAllPrevious
     , forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
     , goToStart, goToEnd, goToIndex, goToFirst, goToNext, goToLast, goToPrevious
     , map, indexedMap, selectedMap, indexedSelectedMap
@@ -29,7 +30,7 @@ This **pseudocode** will make the documentation way more enjoyable.
 @docs current, toList, length, currentIndex, isCurrent, isFirst, isLast
 
 # Edit
-@docs remove, replace, insert, insertAfter, insertBefore, filter, reverse
+@docs remove, replace, insert, insertAfter, insertBefore, filter, reverse, removeAllPrevious, removeAllFolowing
 
 # Move
 @docs forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
@@ -257,6 +258,21 @@ filter condition (Zipper before elem after) =
                 Zipper beforeBis head queue |> Just
         )
 
+{-|.
+
+    removeAllFolowing [1, <2>, 3, 4] == [1, <2>]
+-}
+removeAllFolowing : ZipList a -> ZipList a
+removeAllFolowing (Zipper before elem after) =
+    Zipper before elem []
+
+{-|.
+
+    removeAllPrevious [0, 1, <2>, 3, 4] == [<2>, 3, 4]
+-}
+removeAllPrevious : ZipList a -> ZipList a
+removeAllPrevious (Zipper before elem after) =
+    Zipper [] elem after
 
 {-| Reverse `ZipList` order.
 
