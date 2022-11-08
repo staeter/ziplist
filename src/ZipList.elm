@@ -715,7 +715,7 @@ indexedSelectedMap func (Zipper before elem after) =
         )
 
 
-{-| [MartinSStewart/elm-serialize](https://package.elm-lang.org/packages/MartinSStewart/elm-serialize/1.3.0/)'s codec (= encoder-decoder pair)
+{-| [MartinSStewart/elm-serialize](https://package.elm-lang.org/packages/MartinSStewart/elm-serialize/1.3.0/)'s codec serve as an encoder-decoder pair.
 It guarantees that your decoder return the input that was given to the encoder.
 -}
 codec : Serialize.Codec e a -> Serialize.Codec e (ZipList a)
