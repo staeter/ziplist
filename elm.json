@@ -1,9 +1,9 @@
 {
     "type": "package",
-    "name": "STTR13/ziplist",
+    "name": "staeter/ziplist",
     "summary": "List with a selected element that makes impossible state impossible.",
     "license": "BSD-3-Clause",
-    "version": "1.4.0",
+    "version": "1.0.0",
     "exposed-modules": [
         "ZipList"
     ],
