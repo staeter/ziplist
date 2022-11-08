@@ -2,7 +2,7 @@ module ZipList exposing
     ( ZipList(..)
     , new, fromList, singleton
     , current, toList, length, currentIndex, isCurrent, isFirst, isLast
-    , remove, replace, insert, insertAfter, insertBefore, filter, reverse, removeAllPrevious, removeAllFolowing
+    , remove, replace, insert, insertAfter, insertBefore, filter, reverse, removeAllPrevious, removeAllFollowing
     , forward, backward, jumpForward, jumpBackward, maybeJumpForward, maybeJumpBackward
     , goToStart, goToEnd, goToIndex, goToFirst, goToNext, goToLast, goToPrevious
     , map, indexedMap, selectedMap, indexedSelectedMap
@@ -11,12 +11,12 @@ module ZipList exposing
 
 {-| A `ZipList` is a list that has a single selected element. We call it current as "the one that is currently selected".
 
-To get more explicit examples, I'm gona represent `ZipList`s as `List`s that have the selected element between "<...>":
+To get more explicit examples, I'm gonna represent `ZipList`s as `List`s that have the selected element between "<...>":
 
     Zipper [] 0 [1, 2, 3, 4]  == [<0>, 1, 2, 3, 4]
     Zipper [2, 1, 0] 3 [4]    == [0, 1, 2, <3>, 4]
 
-This **pseudocode** will make the documentation way more enjoyable.
+This **pseudo-code** will make the documentation way more enjoyable.
 
 
 # ZipLists
@@ -36,7 +36,7 @@ This **pseudocode** will make the documentation way more enjoyable.
 
 # Edit
 
-@docs remove, replace, insert, insertAfter, insertBefore, filter, reverse, removeAllPrevious, removeAllFolowing
+@docs remove, replace, insert, insertAfter, insertBefore, filter, reverse, removeAllPrevious, removeAllFollowing
 
 
 # Move
@@ -305,11 +305,11 @@ filter condition (Zipper before elem after) =
 
 {-| .
 
-    removeAllFolowing [1, <2>, 3, 4] == [1, <2>]
+    removeAllFollowing [1, <2>, 3, 4] == [1, <2>]
 
 -}
-removeAllFolowing : ZipList a -> ZipList a
-removeAllFolowing (Zipper before elem _) =
+removeAllFollowing : ZipList a -> ZipList a
+removeAllFollowing (Zipper before elem _) =
     Zipper before elem []
 
 
@@ -353,7 +353,7 @@ forward zipList =
             Zipper (elem :: before) head queue
 
 
-{-| Move current backward. Current will not move if it is at the begining of the `ZipList`.
+{-| Move current backward. Current will not move if it is at the beginning of the `ZipList`.
 
     backward [0, 1, <2>, 3, 4] == [0, <1>, 2, 3, 4]
     backward [<0>, 1, 2]       == [<0>, 1, 2]
@@ -373,7 +373,7 @@ backward zipList =
             Zipper queue head (elem :: after)
 
 
-{-| Move current forward a given amout of times. Current will be the last element of the `ZipList` if the jump size is too big.
+{-| Move current forward a given amount of times. Current will be the last element of the `ZipList` if the jump size is too big.
 
     jumpForward 2 [0, <1>, 2, 3, 4] == [0, 1, 2, <3>, 4]
     jumpForward 2 [0, <1>, 2]       == [0, 1, <2>]
@@ -394,7 +394,7 @@ jumpForward jumpSize zipList =
                 zipList
 
 
-{-| Move current backward a given amout of times. Current will be the first element of the `ZipList` if the jump size is too big.
+{-| Move current backward a given amount of times. Current will be the first element of the `ZipList` if the jump size is too big.
 
     jumpBackward 2 [0, 1, 2, <3>, 4] == [0, <1>, 2, 3, 4]
     jumpBackward 2 [0, <1>, 2]       == [<0>, 1, 2]
@@ -415,7 +415,7 @@ jumpBackward jumpSize zipList =
                 zipList
 
 
-{-| Move current forward a given amout of times. Return `Nothing` if the jump size is too big.
+{-| Move current forward a given amount of times. Return `Nothing` if the jump size is too big.
 
     maybeJumpForward 2 [0, <1>, 2, 3, 4] == Just [0, 1, 2, <3>, 4]
     maybeJumpForward 2 [0, <1>, 2]       == Nothing
@@ -436,7 +436,7 @@ maybeJumpForward jumpSize zipList =
                     |> maybeJumpForward (jumpSize - 1)
 
 
-{-| Move current backward a given amout of times. Return `Nothing` if the jump size is too big.
+{-| Move current backward a given amount of times. Return `Nothing` if the jump size is too big.
 
     maybeJumpBackward 2 [0, 1, 2, <3>, 4] == Just [0, <1>, 2, 3, 4]
     maybeJumpBackward 2 [0, <1>, 2]       == Nothing
@@ -521,10 +521,10 @@ goToIndex newIndex zipList =
         Zero ->
             Just zipList
 
-        Positif ->
+        Positive ->
             maybeJumpForward delta zipList
 
-        Negatif ->
+        Negative ->
             maybeJumpBackward (abs delta) zipList
 
 
@@ -736,8 +736,8 @@ codec valCodec =
 
 type Sign
     = Zero
-    | Positif
-    | Negatif
+    | Positive
+    | Negative
 
 
 sign : Int -> Sign
@@ -746,7 +746,7 @@ sign val =
         Zero
 
     else if val > 0 then
-        Positif
+        Positive
 
     else
-        Negatif
+        Negative
